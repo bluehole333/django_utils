@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 """
-serializers 可用字段
+serializers可用属性
 
 BooleanField	        BooleanField()
 NullBooleanField	    NullBooleanField()
@@ -27,7 +27,33 @@ DateField	            DateField(format=api_settings.DATE_FORMAT, input_formats=N
 TimeField	            TimeField(format=api_settings.TIME_FORMAT, input_formats=None)
 DurationField	        DurationField()
 ChoiceField	            ChoiceField(choices) choices与Django的用法相同
+MultipleChoiceField	    MultipleChoiceField(choices)
+FileField	            FileField(max_length=None, allow_empty_file=False, use_url=UPLOADED_FILES_USE_URL)
+ImageField	            ImageField(max_length=None, allow_empty_file=False, use_url=UPLOADED_FILES_USE_URL)
+ListField	            ListField(child=, min_length=None, max_length=None)
+DictField	            DictField(child=)
+"""
 
+"""
+serializers 可用参数:
+    max_length	最大长度
+    min_lenght	最小长度
+    allow_blank	是否允许为空
+    trim_whitespace	是否截断空白字符
+    max_value	最小值
+    min_value	最大值
+    
+通用参数:
+    read_only	表明该字段仅用于序列化输出，默认False
+    write_only	表明该字段仅用于反序列化输入，默认False
+    required	表明该字段在反序列化时必须输入，默认True
+    default	    反序列化时使用的默认值
+    allow_null	表明该字段是否允许传入None，默认False
+    validators	该字段使用的验证器
+    error_messages	包含错误编号与错误信息的字典
+    label	    用于HTML展示API页面时，显示的字段名称
+    help_text	用于HTML展示API页面时，显示的字段帮助提示信息
+    
 """
 
 
