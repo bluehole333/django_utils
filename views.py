@@ -55,3 +55,19 @@ class XXXXXXAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
     @transaction.atomic
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+class XXXXXXAPIView(APIView):
+    serializer_class = XXXXXXXSerializer
+    schema = XXXXXX_SCHEMA
+
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, format=None):
+        serializer = XXXXXXXXSerializer(data=request.data, context={'request': request})
+
+        if serializer.is_valid(raise_exception=True):
+            return JsonResponse({}, status=status.HTTP_200_OK, safe=False)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
