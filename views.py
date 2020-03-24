@@ -1,12 +1,10 @@
 from django.shortcuts import get_object_or_404, redirect
 from rest_framework.exceptions import ParseError, PermissionDenied
-
+from django.db import transaction
 from rest_framework import filters
-from django.conf import settings
 from rest_framework import status, mixins, generics
 from rest_framework.views import APIView
 from django.utils.translation import gettext as _
-from django.http import JsonResponse, HttpResponse, Http404
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
@@ -24,11 +22,16 @@ class XXXXXInfoListAPIView(mixins.ListModelMixin, mixins.CreateModelMixin, gener
         return self.queryset
 
     def get(self, request, *args, **kwargs):
+        # 可以直接返回400错误并附带键值的错误信息
+        # raise ParseError({'name': "电话重复了"})
+        # raise PermissionDenied()
+
         res = self.list(request, *args, **kwargs)
 
         return res
 
 
+# Restfull 更新资源、删除资源
 class XXXXXXAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = XXXXX.objects.all()
     serializer_class = XXXXXSerializer
@@ -37,14 +40,18 @@ class XXXXXXAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
     authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
+    # 没有特殊逻辑需要制定obj 无需声明
     def get_object(self):
-        XXXXX = get_object_or_404(XXXX, pk=self.pk)
+        obj = get_object_or_404(ClassName, pk=self.pk)
 
-        return XXXXX
+        return obj
 
+    @transaction.atomic
     def put(self, request, pk, *args, **kwargs):
         self.pk = pk
-        self.original_obj = self.get_object()
-
         # partial 允许部分修改
         return self.update(request, *args, **kwargs, partial=True)
+
+    @transaction.atomic
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
