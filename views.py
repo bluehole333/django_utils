@@ -32,7 +32,7 @@ class XXXXXInfoListAPIView(mixins.ListModelMixin, mixins.CreateModelMixin, gener
 
 
 # Restfull 更新资源、删除资源
-class XXXXXXAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
+class XXXXXXAPIView(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, generics.GenericAPIView):
     queryset = XXXXX.objects.all()
     serializer_class = XXXXXSerializer
     schema = XXXXX_SCHEMAS
@@ -56,7 +56,14 @@ class XXXXXXAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+    def get(self, request, *args, **kwargs):
+        """默认参数名为pk"""
+        res = self.retrieve(request, *args, **kwargs)
 
+        return res
+
+
+# API View
 class XXXXXXAPIView(APIView):
     serializer_class = XXXXXXXSerializer
     schema = XXXXXX_SCHEMA
@@ -64,6 +71,7 @@ class XXXXXXAPIView(APIView):
     authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
+    @transaction.atomic()
     def post(self, request, format=None):
         serializer = XXXXXXXXSerializer(data=request.data, context={'request': request})
 
