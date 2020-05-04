@@ -1,3 +1,5 @@
+from rest_framework import generics
+from rest_framework import mixins
 from django.db import transaction
 from rest_framework import filters
 from rest_framework.views import APIView
@@ -27,6 +29,11 @@ class XXXXXInfoListAPIView(mixins.ListModelMixin, mixins.CreateModelMixin, gener
         # raise PermissionDenied()
 
         res = self.list(request, *args, **kwargs)
+
+        return res
+
+    def post(self, request, *args, **kwargs):
+        res = self.post(request, *args, **kwargs)
 
         return res
 
