@@ -32,6 +32,10 @@ class XXXXXInfoListAPIView(mixins.ListModelMixin, mixins.CreateModelMixin, gener
 
         return res
 
+    def perform_create(self, serializer):
+        # 重写save的逻辑
+        obj = serializer.save(user=self.request.user)
+
     def post(self, request, *args, **kwargs):
         res = self.post(request, *args, **kwargs)
 
