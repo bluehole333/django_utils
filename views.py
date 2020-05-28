@@ -7,6 +7,7 @@ from django_redis import get_redis_connection
 from django.utils.translation import gettext as _
 from rest_framework import status, mixins, generics
 from django.shortcuts import get_object_or_404, redirect
+from django_filters.rest_framework import DjangoFilterBackend, SearchFilter, OrderingFilter
 from rest_framework.exceptions import ParseError, PermissionDenied
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -55,6 +56,25 @@ class XXXXXXAPIView(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, generics
 
     authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    # 使用django Filter功能首先 pip install django-filter, 然后把django-filter加到INSTALLED_APPS列表中
+    # DjangoFilterBackend: filter查询
+    # SearchFilter: 搜索
+    # OrderingFilter： 排序字段
+    # 官方文档： https://django-filter.readthedocs.io/en/master/guide/rest_framework.html
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
+    """
+    The search behavior may be restricted by prepending various characters to the search_fields.
+    '^' Starts-with search.
+    '=' Exact matches.
+    '@' Full-text search. (Currently only supported Django's MySQL backend.)
+    '$' Regex search.
+    For example:
+        search_fields = ('=username', '=email')
+    """
+    filter_fields = ('name', )
+    # 自定义排序
+    ordering_fields = ('create_time', )
 
     # 没有特殊逻辑需要制定obj 无需声明
     def get_object(self):
