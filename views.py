@@ -3,12 +3,16 @@ from rest_framework import mixins
 from django.db import transaction
 from rest_framework import filters
 from rest_framework.views import APIView
+from django_redis import get_redis_connection
 from django.utils.translation import gettext as _
 from rest_framework import status, mixins, generics
 from django.shortcuts import get_object_or_404, redirect
 from rest_framework.exceptions import ParseError, PermissionDenied
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+
+# 获取django default默认cache，获得redis或memcache缓存实例
+redis_cli = get_redis_connection("default")
 
 
 # Restfull 获取资源、创建资源
@@ -26,14 +30,15 @@ class XXXXXInfoListAPIView(mixins.ListModelMixin, mixins.CreateModelMixin, gener
     def get(self, request, *args, **kwargs):
         # 可以直接返回400错误并附带键值的错误信息
         # raise ParseError({'name': "电话重复了"})
-        # raise PermissionDenied()
+        # 可直接返回403权限错误
+        # raise PermissionDenied("您没有权限")
 
         res = self.list(request, *args, **kwargs)
 
         return res
 
     def perform_create(self, serializer):
-        # 重写save的逻辑
+        # 重写save的逻辑 实现自定义变量save
         obj = serializer.save(user=self.request.user)
 
     def post(self, request, *args, **kwargs):
