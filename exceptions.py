@@ -1,3 +1,7 @@
+"""
+settings配置REST_FRAMEWORK:
+    'EXCEPTION_HANDLER': 'conf.exceptions.custom_exception_handler',
+"""
 import logging
 from rest_framework.views import exception_handler
 
