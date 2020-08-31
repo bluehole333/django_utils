@@ -57,12 +57,19 @@ serializers 可用参数:
 """
 
 
+class MemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ('xxx', )
+
+
 class XXXXXXXSerializer(serializers.ModelSerializer):
     """
     ModelSerializer
     """
     # 返回值
     xxxxx = serializers.SerializerMethodField(label="xx")
+    member = MemberSerializer()
 
     class Meta:
         model = ModelName
@@ -79,7 +86,7 @@ class XXXXXSerializer(serializers.Serializer):
     """
     一般可用于自定义验证
     """
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField(required=True, )
 
     def validate_email(self, value):
         if value == 'xxxx':
